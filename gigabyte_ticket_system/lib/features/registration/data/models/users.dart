@@ -1,16 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class User {
   String? name;
   String? surName;
   String? companyName;
-  double? telePhoneNumber;
+  String? telePhoneNumber;
   String? email;
   String? address;
   String? city;
   String? region;
   String? userName;
   String? password;
+  String? confirmPassword;
+  bool? isValidUser;
   User({
     this.name,
     this.surName,
@@ -22,6 +26,8 @@ class User {
     this.region,
     this.userName,
     this.password,
+    this.confirmPassword,
+    this.isValidUser,
   });
   factory User.empty() {
     return User();
@@ -31,13 +37,15 @@ class User {
     String? name,
     String? surName,
     String? companyName,
-    double? telePhoneNumber,
+    String? telePhoneNumber,
     String? email,
     String? address,
     String? city,
     String? region,
     String? userName,
     String? password,
+    String? confirmPassword,
+    bool? isValidUser,
   }) {
     return User(
       name: name ?? this.name,
@@ -50,6 +58,8 @@ class User {
       region: region ?? this.region,
       userName: userName ?? this.userName,
       password: password ?? this.password,
+      confirmPassword: confirmPassword ?? this.confirmPassword,
+      isValidUser: isValidUser ?? this.isValidUser,
     );
   }
 
@@ -65,6 +75,8 @@ class User {
       'region': region,
       'userName': userName,
       'password': password,
+      'confirmPassword': confirmPassword,
+      'isValidUser': isValidUser,
     };
   }
 
@@ -80,6 +92,8 @@ class User {
       region: map['region'],
       userName: map['userName'],
       password: map['password'],
+      confirmPassword: map['confirmPassword'],
+      isValidUser: map['isValidUser'],
     );
   }
 
@@ -89,7 +103,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(name: $name, surName: $surName, companyName: $companyName, telePhoneNumber: $telePhoneNumber, email: $email, address: $address, city: $city, region: $region, userName: $userName, password: $password)';
+    return 'User(name: $name, surName: $surName, companyName: $companyName, telePhoneNumber: $telePhoneNumber, email: $email, address: $address, city: $city, region: $region, userName: $userName, password: $password, confirmPassword: $confirmPassword, isValidUser: $isValidUser)';
   }
 
   @override
@@ -106,7 +120,9 @@ class User {
         other.city == city &&
         other.region == region &&
         other.userName == userName &&
-        other.password == password;
+        other.password == password &&
+        other.confirmPassword == confirmPassword &&
+        other.isValidUser == isValidUser;
   }
 
   @override
@@ -120,6 +136,8 @@ class User {
         city.hashCode ^
         region.hashCode ^
         userName.hashCode ^
-        password.hashCode;
+        password.hashCode ^
+        confirmPassword.hashCode ^
+        isValidUser.hashCode;
   }
 }

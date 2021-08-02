@@ -2,7 +2,7 @@ import 'package:gigabyte_ticket_system/features/registration/data/datasources/da
 import 'package:gigabyte_ticket_system/features/registration/data/models/users.dart';
 
 class RegistrationRepository extends DataLinkRegistration {
-  Future<bool> insetUser(User user) async {
+  static Future<bool> insetUser(User user) async {
     bool confirm = true;
     try {
       await DataLinkRegistration.registerUser(user);
@@ -11,6 +11,17 @@ class RegistrationRepository extends DataLinkRegistration {
       confirm = false;
       print(e);
       return confirm;
+    }
+  }
+
+  static Future<bool> isUserAvialable(String userName) async {
+    late bool confirm;
+    try {
+      confirm = await DataLinkRegistration.checkUserAvailable(userName);
+      return confirm;
+    } catch (e) {
+      print(e);
+      throw (e);
     }
   }
 }
