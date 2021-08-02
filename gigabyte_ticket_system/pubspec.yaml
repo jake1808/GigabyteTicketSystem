@@ -31,6 +31,8 @@ dependencies:
   flutter_bloc: ^7.1.0
   sqflite: ^2.0.0+3
   flutter_native_splash: ^1.2.0
+  shared_preferences: ^2.0.6
+  equatable: ^2.0.3
 flutter_native_splash:
   color: "#ffffff"
   image: assets/splash.png
