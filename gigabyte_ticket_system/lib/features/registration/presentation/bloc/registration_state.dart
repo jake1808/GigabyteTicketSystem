@@ -1,6 +1,7 @@
 part of 'registration_bloc.dart';
 
 class RegistrationState extends Equatable {
+  final Name name;
   final Email email;
   final Password password;
   final TelePhone phone;
@@ -8,6 +9,7 @@ class RegistrationState extends Equatable {
   final FormzStatus status;
 
   RegistrationState({
+    this.name = const Name.pure(),
     this.email = const Email.pure(),
     this.password = const Password.pure(),
     this.status = FormzStatus.pure,
@@ -15,6 +17,7 @@ class RegistrationState extends Equatable {
     this.phone = const TelePhone.pure(),
   });
   RegistrationState copywith({
+    Name? name,
     Email? email,
     Password? password,
     FormzStatus? status,
@@ -22,6 +25,7 @@ class RegistrationState extends Equatable {
     TelePhone? phone,
   }) {
     return RegistrationState(
+        name: name ?? this.name,
         email: email ?? this.email,
         password: password ?? this.password,
         phone: phone ?? this.phone,

@@ -40,4 +40,15 @@ class PhoneChanged extends RegistrationEvent {
 
 class PhoneUnfocused extends RegistrationEvent {}
 
+class NameChanged extends RegistrationEvent {
+  const NameChanged({required this.name});
+
+  final String name;
+
+  @override
+  List<Object> get props => [name];
+}
+
+class NameUnfocused extends RegistrationEvent {}
+
 class FormSubmitted extends RegistrationEvent {}
