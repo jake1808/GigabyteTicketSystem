@@ -1,21 +1,18 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 class User {
-  String? name;
-  String? surName;
-  String? companyName;
-  String? telePhoneNumber;
-  String? email;
-  String? address;
-  String? city;
-  String? region;
-  String? userName;
-  String? password;
-  String? confirmPassword;
-  bool? isValidUser;
-  User({
+  final String? name;
+  final String? surName;
+  final String? companyName;
+  final String? telePhoneNumber;
+  final String? email;
+  final String? address;
+  final String? city;
+  final String? region;
+  final String? userName;
+  final String? password;
+
+  const User({
     this.name,
     this.surName,
     this.companyName,
@@ -26,12 +23,7 @@ class User {
     this.region,
     this.userName,
     this.password,
-    this.confirmPassword,
-    this.isValidUser,
   });
-  factory User.empty() {
-    return User();
-  }
 
   User copyWith({
     String? name,
@@ -44,8 +36,6 @@ class User {
     String? region,
     String? userName,
     String? password,
-    String? confirmPassword,
-    bool? isValidUser,
   }) {
     return User(
       name: name ?? this.name,
@@ -58,8 +48,6 @@ class User {
       region: region ?? this.region,
       userName: userName ?? this.userName,
       password: password ?? this.password,
-      confirmPassword: confirmPassword ?? this.confirmPassword,
-      isValidUser: isValidUser ?? this.isValidUser,
     );
   }
 
@@ -75,8 +63,6 @@ class User {
       'region': region,
       'userName': userName,
       'password': password,
-      'confirmPassword': confirmPassword,
-      'isValidUser': isValidUser,
     };
   }
 
@@ -92,8 +78,6 @@ class User {
       region: map['region'],
       userName: map['userName'],
       password: map['password'],
-      confirmPassword: map['confirmPassword'],
-      isValidUser: map['isValidUser'],
     );
   }
 
@@ -103,7 +87,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(name: $name, surName: $surName, companyName: $companyName, telePhoneNumber: $telePhoneNumber, email: $email, address: $address, city: $city, region: $region, userName: $userName, password: $password, confirmPassword: $confirmPassword, isValidUser: $isValidUser)';
+    return 'User(name: $name, surName: $surName, companyName: $companyName, telePhoneNumber: $telePhoneNumber, email: $email, address: $address, city: $city, region: $region, userName: $userName, password: $password)';
   }
 
   @override
@@ -120,9 +104,7 @@ class User {
         other.city == city &&
         other.region == region &&
         other.userName == userName &&
-        other.password == password &&
-        other.confirmPassword == confirmPassword &&
-        other.isValidUser == isValidUser;
+        other.password == password;
   }
 
   @override
@@ -136,8 +118,8 @@ class User {
         city.hashCode ^
         region.hashCode ^
         userName.hashCode ^
-        password.hashCode ^
-        confirmPassword.hashCode ^
-        isValidUser.hashCode;
+        password.hashCode;
   }
+
+  static empty() {}
 }
