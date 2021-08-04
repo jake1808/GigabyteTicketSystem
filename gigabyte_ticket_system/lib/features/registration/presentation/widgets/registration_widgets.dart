@@ -14,6 +14,7 @@ class _MyFormState extends State<MyForm> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _phoneFocusNode = FocusNode();
+  final _nameFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -33,6 +34,11 @@ class _MyFormState extends State<MyForm> {
         context.read<RegistrationBloc>().add(PhoneUnfocused());
       }
     });
+    _nameFocusNode.addListener(() {
+      if (!_nameFocusNode.hasFocus) {
+        context.read<RegistrationBloc>().add(NameUnfocused());
+      }
+    });
   }
 
   @override
@@ -40,6 +46,7 @@ class _MyFormState extends State<MyForm> {
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     _phoneFocusNode.dispose();
+    _nameFocusNode.dispose();
     super.dispose();
   }
 
@@ -69,6 +76,7 @@ class _MyFormState extends State<MyForm> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            NameInput(focusNode: _nameFocusNode),
             EmailInput(focusNode: _emailFocusNode),
             PasswordInput(focusNode: _passwordFocusNode),
             PhoneInput(focusNode: _phoneFocusNode),
@@ -76,6 +84,33 @@ class _MyFormState extends State<MyForm> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class NameInput extends StatelessWidget {
+  const NameInput({Key? key, required this.focusNode}) : super(key: key);
+  final focusNode;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.name.value,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.person),
+            labelText: 'Name',
+            helperText: 'Please enter your name',
+            errorText: state.name.invalid
+                ? 'Make sure it is 4-10 characters long and does not contain special characters'
+                : null,
+          ),
+          onChanged: (value) {
+            context.read<RegistrationBloc>().add(NameChanged(name: value));
+          },
+        );
+      },
     );
   }
 }
@@ -114,14 +149,15 @@ class PhoneInput extends StatelessWidget {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       builder: (context, state) {
         return TextFormField(
-          initialValue: state.phone.value,
+          // maxLength: 11,
+          initialValue: '${state.phone.value}',
           focusNode: focusNode,
           decoration: InputDecoration(
             icon: const Icon(Icons.phone),
             labelText: 'Phone Number',
             helperText: 'Enter a valid turkish number.',
             errorText:
-                state.password.invalid ? 'Please use a turkish number' : null,
+                state.phone.invalid ? 'Please use a turkish number' : null,
           ),
           keyboardType: TextInputType.phone,
           onChanged: (value) {

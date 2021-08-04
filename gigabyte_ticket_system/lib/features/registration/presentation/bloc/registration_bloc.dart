@@ -4,17 +4,19 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:gigabyte_ticket_system/features/registration/data/models/models.dart';
+import 'package:logger/logger.dart';
 
 part 'registration_event.dart';
 part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   RegistrationBloc() : super(RegistrationState());
-
+  var logger = Logger(printer: PrettyPrinter());
   @override
   void onTransition(
       Transition<RegistrationEvent, RegistrationState> transition) {
-    print(transition);
+    logger.w(transition);
+    logger.w(state.phone);
     super.onTransition(transition);
   }
 
@@ -93,7 +95,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
               telePhoneNumber: state.phone.value,
             ));
 
-        print(state.user.toString() + "here");
+        logger.w(state.user);
         yield state.copywith(status: FormzStatus.submissionSuccess);
       }
     }

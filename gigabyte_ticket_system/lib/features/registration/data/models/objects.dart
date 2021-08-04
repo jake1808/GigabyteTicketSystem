@@ -47,7 +47,7 @@ class TelePhone extends FormzInput<String, PhoneValidationError> {
   const TelePhone.pure([String value = '']) : super.pure(value);
   const TelePhone.dirty([String value = '']) : super.pure(value);
 
-  static final _phoneRegex = RegExp(r'^(?:[+0]9)?[0-9]{10}$');
+  static final _phoneRegex = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
 
   @override
   PhoneValidationError? validator(String? value) {

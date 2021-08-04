@@ -34,5 +34,5 @@ class RegistrationState extends Equatable {
   }
 
   @override
-  List<Object> get props => [email, password, status, user];
+  List<Object> get props => [email, password, status, user, name, phone];
 }
