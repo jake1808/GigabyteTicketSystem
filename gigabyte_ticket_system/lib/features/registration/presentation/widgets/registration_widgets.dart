@@ -15,6 +15,13 @@ class _MyFormState extends State<MyForm> {
   final _passwordFocusNode = FocusNode();
   final _phoneFocusNode = FocusNode();
   final _nameFocusNode = FocusNode();
+  final _surNameFocusNode = FocusNode();
+  final _companyNameFocusNode = FocusNode();
+  final _addressFocusNode = FocusNode();
+  final _cityFocusNode = FocusNode();
+  final _regionFocusNode = FocusNode();
+  final _userNameFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +46,36 @@ class _MyFormState extends State<MyForm> {
         context.read<RegistrationBloc>().add(NameUnfocused());
       }
     });
+    _surNameFocusNode.addListener(() {
+      if (!_surNameFocusNode.hasFocus) {
+        context.read<RegistrationBloc>().add(SurNameUnfocused());
+      }
+    });
+    _companyNameFocusNode.addListener(() {
+      if (!_companyNameFocusNode.hasFocus) {
+        context.read<RegistrationBloc>().add(CompanyNameUnfocused());
+      }
+    });
+    _addressFocusNode.addListener(() {
+      if (!_addressFocusNode.hasFocus) {
+        context.read<RegistrationBloc>().add(AddressUnfocused());
+      }
+    });
+    _cityFocusNode.addListener(() {
+      if (!_cityFocusNode.hasFocus) {
+        context.read()<RegistrationBloc>().add(CityUnfocused());
+      }
+    });
+    _regionFocusNode.addListener(() {
+      if (!_regionFocusNode.hasFocus) {
+        context.read()<RegistrationBloc>().add(RegionUnfocused());
+      }
+    });
+    _userNameFocusNode.addListener(() {
+      if (!_userNameFocusNode.hasFocus) {
+        context.read()<RegistrationBloc>().add(UserNameUnfocused());
+      }
+    });
   }
 
   @override
@@ -47,6 +84,12 @@ class _MyFormState extends State<MyForm> {
     _passwordFocusNode.dispose();
     _phoneFocusNode.dispose();
     _nameFocusNode.dispose();
+    _surNameFocusNode.dispose();
+    _companyNameFocusNode.dispose();
+    _addressFocusNode.dispose();
+    _cityFocusNode.dispose();
+    _regionFocusNode.dispose();
+    _userNameFocusNode.dispose();
     super.dispose();
   }
 
@@ -73,17 +116,197 @@ class _MyFormState extends State<MyForm> {
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
           children: [
-            NameInput(focusNode: _nameFocusNode),
-            EmailInput(focusNode: _emailFocusNode),
-            PasswordInput(focusNode: _passwordFocusNode),
-            PhoneInput(focusNode: _phoneFocusNode),
-            SubmitButton(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                NameInput(focusNode: _nameFocusNode),
+                SurNameInput(focusNode: _surNameFocusNode),
+                UserNameInput(focusNode: _userNameFocusNode),
+                EmailInput(focusNode: _emailFocusNode),
+                PasswordInput(focusNode: _passwordFocusNode),
+                CompanyInput(focusNode: _companyNameFocusNode),
+                AddressInput(focusNode: _addressFocusNode),
+                CityInput(focusNode: _cityFocusNode),
+                RegionInput(focusNode: _regionFocusNode),
+                PhoneInput(focusNode: _phoneFocusNode),
+                SubmitButton(),
+              ],
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class CityInput extends StatelessWidget {
+  const CityInput({Key? key, required this.focusNode}) : super(key: key);
+  final focusNode;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.city.value,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.location_city),
+            labelText: 'City',
+            helperText: 'Please enter your city',
+            errorText: state.city.invalid
+                ? 'Make sure it is 4-10 characters long and does not contain special characters'
+                : null,
+          ),
+          onChanged: (value) {
+            context.read<RegistrationBloc>().add(CityChanged(city: value));
+          },
+        );
+      },
+    );
+  }
+}
+
+class RegionInput extends StatelessWidget {
+  const RegionInput({Key? key, required this.focusNode}) : super(key: key);
+  final focusNode;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.region.value,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.location_city),
+            labelText: 'Region',
+            helperText: 'Please enter your region',
+            errorText: state.city.invalid
+                ? 'Make sure it is 4-10 characters long and does not contain special characters'
+                : null,
+          ),
+          onChanged: (value) {
+            context.read<RegistrationBloc>().add(RegionChanged(region: value));
+          },
+        );
+      },
+    );
+  }
+}
+
+class SurNameInput extends StatelessWidget {
+  const SurNameInput({Key? key, required this.focusNode}) : super(key: key);
+  final focusNode;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.surName.value,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.person),
+            labelText: 'Surname',
+            helperText: 'Please enter your Surname',
+            errorText: state.surName.invalid
+                ? 'Make sure it is 4-10 characters long and does not contain special characters'
+                : null,
+          ),
+          onChanged: (value) {
+            context
+                .read<RegistrationBloc>()
+                .add(SurNameChanged(surName: value));
+          },
+        );
+      },
+    );
+  }
+}
+
+class UserNameInput extends StatelessWidget {
+  const UserNameInput({Key? key, required this.focusNode}) : super(key: key);
+  final focusNode;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.userName.value,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.person),
+            labelText: 'User Name',
+            helperText: 'Please enter your UserName',
+            errorText: state.userName.invalid
+                ? 'Make sure it is 4-10 characters long and does not contain special characters'
+                : null,
+          ),
+          onChanged: (value) {
+            context
+                .read<RegistrationBloc>()
+                .add(UserNameChanged(userName: value));
+          },
+        );
+      },
+    );
+  }
+}
+
+class CompanyInput extends StatelessWidget {
+  const CompanyInput({Key? key, required this.focusNode}) : super(key: key);
+  final focusNode;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.company.value,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.add_business_outlined),
+            labelText: 'company',
+            helperText: 'Please enter your company',
+            errorText: state.company.invalid
+                ? 'Make sure it is 4-10 characters long and does not contain special characters'
+                : null,
+          ),
+          onChanged: (value) {
+            context
+                .read<RegistrationBloc>()
+                .add(CompanyNameChanged(compayName: value));
+          },
+        );
+      },
+    );
+  }
+}
+
+class AddressInput extends StatelessWidget {
+  const AddressInput({Key? key, required this.focusNode}) : super(key: key);
+  final focusNode;
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.address.value,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.alternate_email),
+            labelText: 'Address',
+            helperText: 'Please enter your Address',
+            errorText: state.company.invalid
+                ? 'Make sure it is a valid address'
+                : null,
+          ),
+          onChanged: (value) {
+            context
+                .read<RegistrationBloc>()
+                .add(AddressChanged(address: value));
+          },
+        );
+      },
     );
   }
 }
@@ -155,7 +378,7 @@ class PhoneInput extends StatelessWidget {
           decoration: InputDecoration(
             icon: const Icon(Icons.phone),
             labelText: 'Phone Number',
-            helperText: 'Enter a valid turkish number.',
+            helperText: 'Enter a valid turkish number starting with 09.',
             errorText:
                 state.phone.invalid ? 'Please use a turkish number' : null,
           ),

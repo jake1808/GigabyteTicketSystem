@@ -51,4 +51,70 @@ class NameChanged extends RegistrationEvent {
 
 class NameUnfocused extends RegistrationEvent {}
 
+class SurNameChanged extends RegistrationEvent {
+  const SurNameChanged({required this.surName});
+
+  final String surName;
+
+  @override
+  List<Object> get props => [surName];
+}
+
+class SurNameUnfocused extends RegistrationEvent {}
+
+class CompanyNameChanged extends RegistrationEvent {
+  const CompanyNameChanged({required this.compayName});
+
+  final String compayName;
+
+  @override
+  List<Object> get props => [compayName];
+}
+
+class CompanyNameUnfocused extends RegistrationEvent {}
+
+class AddressChanged extends RegistrationEvent {
+  const AddressChanged({required this.address});
+
+  final String address;
+
+  @override
+  List<Object> get props => [address];
+}
+
+class AddressUnfocused extends RegistrationEvent {}
+
+class CityChanged extends RegistrationEvent {
+  const CityChanged({required this.city});
+
+  final String city;
+
+  @override
+  List<Object> get props => [city];
+}
+
+class CityUnfocused extends RegistrationEvent {}
+
+class RegionChanged extends RegistrationEvent {
+  const RegionChanged({required this.region});
+
+  final String region;
+
+  @override
+  List<Object> get props => [region];
+}
+
+class RegionUnfocused extends RegistrationEvent {}
+
+class UserNameChanged extends RegistrationEvent {
+  const UserNameChanged({required this.userName});
+
+  final String userName;
+
+  @override
+  List<Object> get props => [userName];
+}
+
+class UserNameUnfocused extends RegistrationEvent {}
+
 class FormSubmitted extends RegistrationEvent {}
