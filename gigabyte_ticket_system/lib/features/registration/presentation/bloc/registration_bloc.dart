@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:gigabyte_ticket_system/features/registration/data/datasources/DataBase.dart';
 import 'package:gigabyte_ticket_system/features/registration/data/models/models.dart';
 import 'package:logger/logger.dart';
 
@@ -12,6 +13,7 @@ part 'registration_state.dart';
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   RegistrationBloc() : super(RegistrationState());
   var logger = Logger(printer: PrettyPrinter());
+
   @override
   void onTransition(
       Transition<RegistrationEvent, RegistrationState> transition) {
@@ -403,16 +405,32 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             status: FormzStatus.submissionInProgress,
             user: User(
               name: state.name.value,
-              surName: state.surName.value,
-              telePhoneNumber: state.phone.value,
+              surname: state.surName.value,
+              telephone: state.phone.value,
               email: state.email.value,
               password: state.password.value,
-              companyName: state.company.value,
+              companyname: state.company.value,
               address: state.address.value,
               city: state.city.value,
               region: state.region.value,
-              userName: state.userName.value,
+              username: state.userName.value,
             ));
+        try {
+          DBhelper.db.initDB();
+          User? result = await DBhelper.db.getUser(state.user);
+          logger.w(result);
+          if (result == null) {
+            int res = await DBhelper.db.newUser(state.user);
+            state.user.copyWith(id: res);
+            logger.w(state.user);
+          } else {
+            //TODO ALREADY IN USE
+            print('already made');
+          }
+          logger.w(result.toString() + 'here');
+        } catch (e) {
+          logger.w(e);
+        }
 
         logger.w(state.user);
         yield state.copywith(status: FormzStatus.submissionSuccess);
