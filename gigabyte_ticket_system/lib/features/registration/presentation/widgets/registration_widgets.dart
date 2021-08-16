@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gigabyte_ticket_system/features/registration/presentation/bloc/registration_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:gigabyte_ticket_system/features/registration/presentation/registrationBloc/registration_bloc.dart';
 
 class MyForm extends StatefulWidget {
   MyForm({Key? key}) : super(key: key);
@@ -112,6 +112,10 @@ class _MyFormState extends State<MyForm> {
                 content: Text('Submitting...'),
               ),
             );
+        }
+        if (state.status.isSubmissionFailure) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          showDialog(context: context, builder: (_) => FailureDialog());
         }
       },
       child: Padding(
@@ -474,6 +478,46 @@ class SuccessDialog extends StatelessWidget {
             ElevatedButton(
               child: const Text('OK'),
               onPressed: () => Null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FailureDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                const Icon(Icons.info),
+                const Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'this users email exisits.',
+                      softWrap: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ElevatedButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.pop(context, FailureDialog());
+              },
             ),
           ],
         ),

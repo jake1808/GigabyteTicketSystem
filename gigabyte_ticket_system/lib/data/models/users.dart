@@ -1,82 +1,87 @@
 import 'dart:convert';
 
 class User {
+  final int? id;
   final String? name;
-  final String? surName;
-  final String? companyName;
-  final String? telePhoneNumber;
+  final String? surname;
+  final String? companyname;
+  final String? telephone;
   final String? email;
   final String? address;
   final String? city;
   final String? region;
-  final String? userName;
+  final String? username;
   final String? password;
-
   const User({
+    this.id,
     this.name,
-    this.surName,
-    this.companyName,
-    this.telePhoneNumber,
+    this.surname,
+    this.companyname,
+    this.telephone,
     this.email,
     this.address,
     this.city,
     this.region,
-    this.userName,
+    this.username,
     this.password,
   });
 
   User copyWith({
+    int? id,
     String? name,
-    String? surName,
-    String? companyName,
-    String? telePhoneNumber,
+    String? surname,
+    String? companyname,
+    String? telePhonenumber,
     String? email,
     String? address,
     String? city,
     String? region,
-    String? userName,
+    String? username,
     String? password,
   }) {
     return User(
+      id: id ?? this.id,
       name: name ?? this.name,
-      surName: surName ?? this.surName,
-      companyName: companyName ?? this.companyName,
-      telePhoneNumber: telePhoneNumber ?? this.telePhoneNumber,
+      surname: surname ?? this.surname,
+      companyname: companyname ?? this.companyname,
+      telephone: telePhonenumber ?? this.telephone,
       email: email ?? this.email,
       address: address ?? this.address,
       city: city ?? this.city,
       region: region ?? this.region,
-      userName: userName ?? this.userName,
+      username: username ?? this.username,
       password: password ?? this.password,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
-      'surName': surName,
-      'companyName': companyName,
-      'telePhoneNumber': telePhoneNumber,
+      'surname': surname,
+      'companyname': companyname,
+      'telePhonenumber': telephone,
       'email': email,
       'address': address,
       'city': city,
       'region': region,
-      'userName': userName,
+      'username': username,
       'password': password,
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
+      id: map['id'],
       name: map['name'],
-      surName: map['surName'],
-      companyName: map['companyName'],
-      telePhoneNumber: map['telePhoneNumber'],
+      surname: map['surname'],
+      companyname: map['companyname'],
+      telephone: map['telePhonenumber'],
       email: map['email'],
       address: map['address'],
       city: map['city'],
       region: map['region'],
-      userName: map['userName'],
+      username: map['username'],
       password: map['password'],
     );
   }
@@ -87,7 +92,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(name: $name, surName: $surName, companyName: $companyName, telePhoneNumber: $telePhoneNumber, email: $email, address: $address, city: $city, region: $region, userName: $userName, password: $password)';
+    return 'User(id: $id, name: $name, surname: $surname, companyname: $companyname, telePhonenumber: $telephone, email: $email, address: $address, city: $city, region: $region, username: $username, password: $password)';
   }
 
   @override
@@ -95,31 +100,31 @@ class User {
     if (identical(this, other)) return true;
 
     return other is User &&
+        other.id == id &&
         other.name == name &&
-        other.surName == surName &&
-        other.companyName == companyName &&
-        other.telePhoneNumber == telePhoneNumber &&
+        other.surname == surname &&
+        other.companyname == companyname &&
+        other.telephone == telephone &&
         other.email == email &&
         other.address == address &&
         other.city == city &&
         other.region == region &&
-        other.userName == userName &&
+        other.username == username &&
         other.password == password;
   }
 
   @override
   int get hashCode {
-    return name.hashCode ^
-        surName.hashCode ^
-        companyName.hashCode ^
-        telePhoneNumber.hashCode ^
+    return id.hashCode ^
+        name.hashCode ^
+        surname.hashCode ^
+        companyname.hashCode ^
+        telephone.hashCode ^
         email.hashCode ^
         address.hashCode ^
         city.hashCode ^
         region.hashCode ^
-        userName.hashCode ^
+        username.hashCode ^
         password.hashCode;
   }
-
-  static empty() {}
 }
