@@ -416,7 +416,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             logger.w(state.user);
             yield state.copywith(status: FormzStatus.submissionSuccess);
           } else {
-            //TODO ALREADY IN USE
             yield state.copywith(status: FormzStatus.submissionFailure);
           }
           logger.w(result.toString() + 'here');
