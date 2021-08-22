@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:gigabyte_ticket_system/data/models/models.dart';
+import 'package:gigabyte_ticket_system/data/models/task.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -110,5 +111,88 @@ class DBhelper {
         }
       }
     }
+  }
+
+  Future<int> createTask(Task task) async {
+    final db = await database;
+
+    var res = await db!.rawInsert(
+      '''
+    INSERT INTO Tickets(
+       Urgencylevel, Email, Telephone, Request, TicketProblemDescription, Companyname, Branchnamecity, Region, CompanyAddress, File, Name, Surname 
+    )VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+    ''',
+      [
+        task.urgencyLevel,
+        task.email,
+        task.telePhone,
+        task.request,
+        task.ticketProblemDescription,
+        task.company,
+        task.branchCityName,
+        task.region,
+        task.companyAddress,
+        task.file,
+        task.name,
+        task.surname,
+      ],
+    );
+    return res;
+  }
+
+  Future updateTask(Task task) async {
+    final db = await database;
+
+    db?.rawUpdate(''' 
+    UPDATE Tickets
+    SET Urgencylevel=?, Email=?, Telephone=?, Request=?, TicketProblemDescription=?, Companyname=?, Branchnamecity=?, Region=?, CompanyAddress=?, File=?, Name=?, Surname=? 
+    WHERE id=?
+    ''', [
+      task.urgencyLevel,
+      task.email,
+      task.telePhone,
+      task.request,
+      task.ticketProblemDescription,
+      task.company,
+      task.branchCityName,
+      task.region,
+      task.companyAddress,
+      task.file,
+      task.name,
+      task.surname,
+      task.id,
+    ]);
+  }
+
+  Future<List<Task>> getTasks() async {
+    final db = await database;
+    List<Task> tasks = [];
+
+    var res = await db!.rawQuery(''' 
+    SELECT * FROM Tickets
+    ''');
+    if (res.length == 0) {
+      return [];
+    } else {
+      for (var i = 0; i < res.length; i++) {
+        Task temp = Task.fromMap(res[i]);
+        tasks.add(temp);
+      }
+      logger.w(tasks);
+      return tasks;
+    }
+  }
+
+  Future deleteTask(Task task) async {
+    final db = await database;
+
+    var res = await db!.rawDelete(
+      ''' 
+    DELETE FROM Tickets WHERE id = ?
+    ''',
+      [
+        task.id,
+      ],
+    );
   }
 }

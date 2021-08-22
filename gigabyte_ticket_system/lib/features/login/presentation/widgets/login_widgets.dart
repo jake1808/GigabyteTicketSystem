@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gigabyte_ticket_system/features/login/presentation/bloc/login_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gigabyte_ticket_system/features/registration/presentation/pages/registrationPage.dart';
+import 'package:gigabyte_ticket_system/features/task/presentation/pages/task_screen.dart';
 
 class MyLoginForm extends StatefulWidget {
   MyLoginForm({Key? key}) : super(key: key);
@@ -67,10 +69,26 @@ class _MyLoginFormState extends State<MyLoginForm> {
               EmailInput(focusNode: _emailFocusNode),
               PasswordInput(focusNode: _passwordFocusNode),
               SubmitButton(),
+              RegistrationButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class RegistrationButton extends StatelessWidget {
+  const RegistrationButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => RegistrationPage()));
+      },
+      child: const Text('Registration'),
     );
   }
 }
@@ -160,9 +178,22 @@ class SuccessDialog extends StatelessWidget {
                 ),
               ],
             ),
-            ElevatedButton(
-              child: const Text('OK'),
-              onPressed: () => Null,
+            BlocProvider(
+              create: (context) => LoginBloc(),
+              child: BlocBuilder<LoginBloc, LoginState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TaskScreen(state.user)));
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

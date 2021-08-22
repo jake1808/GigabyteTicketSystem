@@ -14,6 +14,7 @@ class Task {
   String? file;
   String? name;
   String? surname;
+  String? status;
   Task({
     this.id,
     this.urgencyLevel,
@@ -28,6 +29,7 @@ class Task {
     this.file,
     this.name,
     this.surname,
+    this.status,
   });
 
   Task copyWith({
@@ -44,6 +46,7 @@ class Task {
     String? file,
     String? name,
     String? surname,
+    String? status,
   }) {
     return Task(
       id: id ?? this.id,
@@ -60,6 +63,7 @@ class Task {
       file: file ?? this.file,
       name: name ?? this.name,
       surname: surname ?? this.surname,
+      status: status ?? this.status,
     );
   }
 
@@ -78,6 +82,7 @@ class Task {
       'file': file,
       'name': name,
       'surname': surname,
+      'status': status,
     };
   }
 
@@ -96,6 +101,7 @@ class Task {
       file: map['file'],
       name: map['name'],
       surname: map['surname'],
+      status: map['status'],
     );
   }
 
@@ -105,7 +111,7 @@ class Task {
 
   @override
   String toString() {
-    return 'Task(id: $id, urgencyLevel: $urgencyLevel, email: $email, telePhone: $telePhone, request: $request, ticketProblemDescription: $ticketProblemDescription, company: $company, branchCityName: $branchCityName, region: $region, companyAddress: $companyAddress, file: $file, name: $name, surname: $surname)';
+    return 'Task(id: $id, urgencyLevel: $urgencyLevel, email: $email, telePhone: $telePhone, request: $request, ticketProblemDescription: $ticketProblemDescription, company: $company, branchCityName: $branchCityName, region: $region, companyAddress: $companyAddress, file: $file, name: $name, surname: $surname, status: $status)';
   }
 
   @override
@@ -125,7 +131,8 @@ class Task {
         other.companyAddress == companyAddress &&
         other.file == file &&
         other.name == name &&
-        other.surname == surname;
+        other.surname == surname &&
+        other.status == status;
   }
 
   @override
@@ -142,6 +149,7 @@ class Task {
         companyAddress.hashCode ^
         file.hashCode ^
         name.hashCode ^
-        surname.hashCode;
+        surname.hashCode ^
+        status.hashCode;
   }
 }

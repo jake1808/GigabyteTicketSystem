@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:gigabyte_ticket_system/features/login/presentation/pages/loginPage.dart';
 import 'package:gigabyte_ticket_system/features/registration/presentation/registrationBloc/registration_bloc.dart';
+import 'package:gigabyte_ticket_system/features/task/presentation/pages/task_screen.dart';
 
 class MyForm extends StatefulWidget {
   MyForm({Key? key}) : super(key: key);
@@ -136,6 +138,7 @@ class _MyFormState extends State<MyForm> {
                 RegionInput(focusNode: _regionFocusNode),
                 PhoneInput(focusNode: _phoneFocusNode),
                 SubmitButton(),
+                LoginButton(),
               ],
             ),
           ],
@@ -439,9 +442,31 @@ class SubmitButton extends StatelessWidget {
       builder: (context, state) {
         return ElevatedButton(
           onPressed: state.status.isValid
-              ? () => context.read<RegistrationBloc>().add(FormSubmitted())
+              ? () {
+                  context.read<RegistrationBloc>().add(FormSubmitted());
+                }
               : null,
           child: const Text('Submit'),
+        );
+      },
+    );
+  }
+}
+
+class LoginButton extends StatelessWidget {
+  const LoginButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        return ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => LoginPage()));
+          },
+          child: const Text('Login'),
         );
       },
     );
@@ -468,16 +493,29 @@ class SuccessDialog extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Form Submitted Successfully!',
+                      'new user made',
                       softWrap: true,
                     ),
                   ),
                 ),
               ],
             ),
-            ElevatedButton(
-              child: const Text('OK'),
-              onPressed: () => Null,
+            BlocProvider(
+              create: (context) => RegistrationBloc(),
+              child: BlocBuilder<RegistrationBloc, RegistrationState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TaskScreen(state.user)));
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
