@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gigabyte_ticket_system/data/models/users.dart';
+import 'package:gigabyte_ticket_system/features/task/presentation/pages/addTask.dart';
 
 class TaskScreen extends StatefulWidget {
   TaskScreen(this.user, {Key? key}) : super(key: key);
@@ -13,7 +14,12 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () => print('add task screen'),
+          onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => AddTask(
+                        user: widget.user,
+                      ))),
           child: Icon(Icons.add),
         ),
         body: ListView.builder(
@@ -27,7 +33,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'My Task',
+                      'Tasks',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 42,
@@ -50,14 +56,40 @@ class _TaskScreenState extends State<TaskScreen> {
               );
             }
             //task widget
-            return Container(
-              margin: EdgeInsets.all(10.0),
-              height: 100,
-              width: double.infinity,
-              color: Colors.red,
+            return Task(
+              index: index,
             );
           },
-          itemCount: 1,
+          itemCount: 10,
         ));
+  }
+}
+
+class Task extends StatelessWidget {
+  const Task({
+    required this.index,
+    Key? key,
+  }) : super(key: key);
+  final int index;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 25.0),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text('Task Title'),
+            subtitle: Text('High - pending'),
+            trailing: Checkbox(
+              value: true,
+              onChanged: (value) {
+                print(value);
+              },
+            ),
+          ),
+          Divider()
+        ],
+      ),
+    );
   }
 }

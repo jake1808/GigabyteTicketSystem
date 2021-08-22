@@ -250,9 +250,7 @@ class SubmitButton extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         return ElevatedButton(
-          onPressed: state.status.isValid
-              ? () => context.read<LoginBloc>().add(Formsubmitted())
-              : null,
+          onPressed: () => context.read<LoginBloc>().add(Formsubmitted()),
           child: const Text('Submit'),
         );
       },

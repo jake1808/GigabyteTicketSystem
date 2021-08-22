@@ -35,10 +35,12 @@ dependencies:
   equatable: ^2.0.3
   formz: ^0.4.0
   logger: ^1.0.0
+  image_picker: ^0.8.3+2
   path_provider: ^2.0.2
 flutter_native_splash:
   color: "#ffffff"
   image: assets/splash.png
+
   android: true
   ios: true
 
