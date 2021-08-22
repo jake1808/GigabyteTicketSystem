@@ -59,20 +59,20 @@ class _AddTaskState extends State<AddTask> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: GestureDetector(
-                      onTap: null,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 50),
-                        child: Icon(
-                          Icons.attach_file,
-                          size: 30,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  //   child: GestureDetector(
+                  //     onTap: null,
+                  //     child: Padding(
+                  //       padding: EdgeInsets.only(top: 50),
+                  //       child: Icon(
+                  //         Icons.attach_file,
+                  //         size: 30,
+                  //         color: Theme.of(context).primaryColor,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               SizedBox(
