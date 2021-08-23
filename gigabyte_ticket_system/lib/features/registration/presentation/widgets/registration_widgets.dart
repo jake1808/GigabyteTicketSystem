@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:gigabyte_ticket_system/data/models/users.dart';
 import 'package:gigabyte_ticket_system/features/login/presentation/pages/loginPage.dart';
 import 'package:gigabyte_ticket_system/features/registration/presentation/registrationBloc/registration_bloc.dart';
 import 'package:gigabyte_ticket_system/features/task/presentation/pages/task_screen.dart';
@@ -103,7 +104,7 @@ class _MyFormState extends State<MyForm> {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           showDialog(
             context: context,
-            builder: (_) => SuccessDialog(),
+            builder: (_) => SuccessDialog(state.user),
           );
         }
         if (state.status.isSubmissionInProgress) {
@@ -380,7 +381,7 @@ class PhoneInput extends StatelessWidget {
       builder: (context, state) {
         return TextFormField(
           // maxLength: 11,
-          initialValue: '${state.phone.value}',
+          initialValue: '09${state.phone.value}',
           focusNode: focusNode,
           decoration: InputDecoration(
             icon: const Icon(Icons.phone),
@@ -472,6 +473,9 @@ class LoginButton extends StatelessWidget {
 }
 
 class SuccessDialog extends StatelessWidget {
+  final User? user;
+
+  SuccessDialog(this.user);
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -509,7 +513,7 @@ class SuccessDialog extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => TaskScreen(state.user)));
+                              builder: (context) => TaskScreen(user)));
                     },
                   );
                 },
