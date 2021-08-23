@@ -130,7 +130,6 @@ class _AddTaskState extends State<AddTask> {
                         icon: Icon(Icons.arrow_drop_down_circle),
                         iconSize: 22.0,
                         iconEnabledColor: Theme.of(context).primaryColor,
-                        hint: Text('Please select an urgency level'),
                         value: current,
                         items: menuItems.map((String item) {
                           return DropdownMenuItem(
@@ -193,17 +192,20 @@ class _AddTaskState extends State<AddTask> {
                             ),
                       ElevatedButton(
                         onPressed: () {
-                          setState(() {
-                            task.branchCityName = widget.user!.city;
-                            task.company = widget.user!.companyname;
-                            task.companyAddress = widget.user!.address;
-                            task.email = widget.user!.email;
-                            task.name = widget.user!.name;
-                            task.region = widget.user!.region;
-                            task.surname = widget.user!.surname;
-                            task.telePhone = widget.user!.telephone;
-                            task.status = 'pending';
-                          });
+                          if (_formkey.currentState!.validate()) {
+                            setState(() {
+                              task.branchCityName = widget.user!.city;
+                              task.company = widget.user!.companyname;
+                              task.companyAddress = widget.user!.address;
+                              task.email = widget.user!.email;
+                              task.name = widget.user!.name;
+                              task.region = widget.user!.region;
+                              task.surname = widget.user!.surname;
+                              task.telePhone = widget.user!.telephone;
+                              task.status = 'pending';
+                            });
+                            Navigator.pop(context);
+                          }
 
                           logger.w(task);
                           logger.w(widget.user);

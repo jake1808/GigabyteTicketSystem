@@ -164,23 +164,19 @@ class DBhelper {
     ]);
   }
 
-  Future<List<Task>> getTasks() async {
+  Future<List<Map<String, dynamic>>> getTasksMapList() async {
     final db = await database;
-    List<Task> tasks = [];
+    final List<Map<String, dynamic>> result = await db!.query("Tickets");
+    return result;
+  }
 
-    var res = await db!.rawQuery(''' 
-    SELECT * FROM Tickets
-    ''');
-    if (res.length == 0) {
-      return [];
-    } else {
-      for (var i = 0; i < res.length; i++) {
-        Task temp = Task.fromMap(res[i]);
-        tasks.add(temp);
-      }
-      logger.w(tasks);
-      return tasks;
-    }
+  Future<List<Task>> getTaskList() async {
+    final List<Map<String, dynamic>> taskMapList = await getTasksMapList();
+    final List<Task> taskList = [];
+    taskMapList.forEach((element) {
+      taskList.add(Task.fromMap(element));
+    });
+    return taskList;
   }
 
   Future deleteTask(Task task) async {

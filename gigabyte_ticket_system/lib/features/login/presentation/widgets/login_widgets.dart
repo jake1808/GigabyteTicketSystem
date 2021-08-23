@@ -18,6 +18,12 @@ class MyLoginForm extends StatefulWidget {
 class _MyLoginFormState extends State<MyLoginForm> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
+  final _formkey = GlobalKey<FormState>();
+  final _emailRegex = RegExp(
+    r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
+  );
+  static final _passwordRegex =
+      RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
 
   void initState() {
     super.initState();
@@ -68,14 +74,76 @@ class _MyLoginFormState extends State<MyLoginForm> {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              EmailInput(focusNode: _emailFocusNode),
-              PasswordInput(focusNode: _passwordFocusNode),
-              SubmitButton(),
-              RegistrationButton(),
-            ],
+          child: Form(
+            key: _formkey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BlocBuilder<LoginBloc, LoginState>(
+                  builder: (context, state) {
+                    return TextFormField(
+                      initialValue: state.email.value,
+                      decoration: InputDecoration(
+                        icon: const Icon(Icons.email),
+                        labelText: 'Email',
+                        helperText: 'email@gmail.com',
+                        errorText: state.email.invalid
+                            ? 'please use a valid email'
+                            : null,
+                      ),
+                      validator: (value) => _emailRegex.hasMatch(value!)
+                          ? null
+                          : "Please enter a valid email",
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) {
+                        context
+                            .read<LoginBloc>()
+                            .add(Emailchanged(email: value));
+                      },
+                    );
+                  },
+                ),
+                BlocBuilder<LoginBloc, LoginState>(
+                  builder: (context, state) {
+                    return TextFormField(
+                      initialValue: state.password.value,
+                      decoration: InputDecoration(
+                        icon: const Icon(Icons.lock),
+                        helperText:
+                            'Password should be atleast 8 characters with atleast one number and one letter.',
+                        helperMaxLines: 2,
+                        labelText: 'Password',
+                        errorMaxLines: 2,
+                        errorText: state.password.invalid
+                            ? 'Password should be atleast 8 characters with atleast one number and one letter.'
+                            : null,
+                      ),
+                      obscureText: true,
+                      onChanged: (value) {
+                        context
+                            .read<LoginBloc>()
+                            .add(Passwordchanged(password: value));
+                      },
+                      textInputAction: TextInputAction.done,
+                      validator: (value) => _passwordRegex.hasMatch(value!)
+                          ? null
+                          : "Please enter a valid password",
+                    );
+                  },
+                ),
+                BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      if (_formkey.currentState!.validate()) {
+                        context.read<LoginBloc>().add(Formsubmitted());
+                      }
+                    },
+                    child: const Text('Submit'),
+                  );
+                }),
+                RegistrationButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -94,64 +162,6 @@ class RegistrationButton extends StatelessWidget {
             MaterialPageRoute(builder: (context) => RegistrationPage()));
       },
       child: const Text('Registration'),
-    );
-  }
-}
-
-class EmailInput extends StatelessWidget {
-  const EmailInput({Key? key, required this.focusNode}) : super(key: key);
-  final focusNode;
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-      builder: (context, state) {
-        return TextFormField(
-          initialValue: state.email.value,
-          focusNode: focusNode,
-          decoration: InputDecoration(
-            icon: const Icon(Icons.email),
-            labelText: 'Email',
-            helperText: 'email@gmail.com',
-            errorText: state.email.invalid ? 'please use a valid email' : null,
-          ),
-          keyboardType: TextInputType.emailAddress,
-          onChanged: (value) {
-            context.read<LoginBloc>().add(Emailchanged(email: value));
-          },
-        );
-      },
-    );
-  }
-}
-
-class PasswordInput extends StatelessWidget {
-  const PasswordInput({Key? key, required this.focusNode}) : super(key: key);
-  final FocusNode focusNode;
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-      builder: (context, state) {
-        return TextFormField(
-          initialValue: state.password.value,
-          focusNode: focusNode,
-          decoration: InputDecoration(
-            icon: const Icon(Icons.lock),
-            helperText:
-                'Password should be atleast 8 characters with atleast one number and one letter.',
-            helperMaxLines: 2,
-            labelText: 'Password',
-            errorMaxLines: 2,
-            errorText: state.password.invalid
-                ? 'Password should be atleast 8 characters with atleast one number and one letter.'
-                : null,
-          ),
-          obscureText: true,
-          onChanged: (value) {
-            context.read<LoginBloc>().add(Passwordchanged(password: value));
-          },
-          textInputAction: TextInputAction.done,
-        );
-      },
     );
   }
 }
@@ -249,22 +259,6 @@ class FailureDialog extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class SubmitButton extends StatelessWidget {
-  const SubmitButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-      builder: (context, state) {
-        return ElevatedButton(
-          onPressed: () => context.read<LoginBloc>().add(Formsubmitted()),
-          child: const Text('Submit'),
-        );
-      },
     );
   }
 }
