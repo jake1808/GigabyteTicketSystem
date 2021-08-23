@@ -163,9 +163,10 @@ class CityInput extends StatelessWidget {
             icon: const Icon(Icons.location_city),
             labelText: 'City',
             helperText: 'Please enter your city',
-            errorText: state.city.invalid
-                ? 'Make sure it is 4-10 characters long and does not contain special characters'
-                : null,
+            errorMaxLines: 2,
+            errorText: state.city.valid
+                ? null
+                : 'Make sure it is 4-10 characters long and does not contain special characters',
           ),
           onChanged: (value) {
             context.read<RegistrationBloc>().add(CityChanged(city: value));
@@ -190,9 +191,10 @@ class RegionInput extends StatelessWidget {
             icon: const Icon(Icons.location_city),
             labelText: 'Region',
             helperText: 'Please enter your region',
-            errorText: state.city.invalid
-                ? 'Make sure it is 4-10 characters long and does not contain special characters'
-                : null,
+            errorMaxLines: 2,
+            errorText: state.city.valid
+                ? null
+                : 'Make sure it is 4-10 characters long and does not contain special characters',
           ),
           onChanged: (value) {
             context.read<RegistrationBloc>().add(RegionChanged(region: value));
@@ -217,9 +219,10 @@ class SurNameInput extends StatelessWidget {
             icon: const Icon(Icons.person),
             labelText: 'Surname',
             helperText: 'Please enter your Surname',
-            errorText: state.surName.invalid
-                ? 'Make sure it is 4-10 characters long and does not contain special characters'
-                : null,
+            errorMaxLines: 2,
+            errorText: state.surName.valid
+                ? null
+                : 'Make sure it is 4-10 characters long and does not contain special characters',
           ),
           onChanged: (value) {
             context
@@ -246,9 +249,10 @@ class UserNameInput extends StatelessWidget {
             icon: const Icon(Icons.person),
             labelText: 'User Name',
             helperText: 'Please enter your UserName',
-            errorText: state.userName.invalid
-                ? 'Make sure it is 4-10 characters long and does not contain special characters'
-                : null,
+            errorMaxLines: 2,
+            errorText: state.userName.valid
+                ? null
+                : 'Make sure it is 4-10 characters long and does not contain special characters',
           ),
           onChanged: (value) {
             context
@@ -275,9 +279,10 @@ class CompanyInput extends StatelessWidget {
             icon: const Icon(Icons.add_business_outlined),
             labelText: 'company',
             helperText: 'Please enter your company',
-            errorText: state.company.invalid
-                ? 'Make sure it is 4-10 characters long and does not contain special characters'
-                : null,
+            errorMaxLines: 2,
+            errorText: state.company.valid
+                ? null
+                : 'Make sure it is 4-10 characters long and does not contain special characters',
           ),
           onChanged: (value) {
             context
@@ -304,9 +309,9 @@ class AddressInput extends StatelessWidget {
             icon: const Icon(Icons.alternate_email),
             labelText: 'Address',
             helperText: 'Please enter your Address',
-            errorText: state.company.invalid
-                ? 'Make sure it is a valid address'
-                : null,
+            errorMaxLines: 2,
+            errorText:
+                state.company.valid ? null : 'Make sure it is a valid address',
           ),
           onChanged: (value) {
             context
@@ -333,9 +338,10 @@ class NameInput extends StatelessWidget {
             icon: const Icon(Icons.person),
             labelText: 'Name',
             helperText: 'Please enter your name',
-            errorText: state.name.invalid
-                ? 'Make sure it is 4-10 characters long and does not contain special characters'
-                : null,
+            errorMaxLines: 2,
+            errorText: state.name.valid
+                ? null
+                : 'Make sure it is 4-10 characters long and does not contain special characters',
           ),
           onChanged: (value) {
             context.read<RegistrationBloc>().add(NameChanged(name: value));
@@ -360,7 +366,8 @@ class EmailInput extends StatelessWidget {
             icon: const Icon(Icons.email),
             labelText: 'Email',
             helperText: 'email@gmail.com',
-            errorText: state.email.invalid ? 'please use a valid email' : null,
+            errorMaxLines: 2,
+            errorText: state.email.valid ? null : 'please use a valid email',
           ),
           keyboardType: TextInputType.emailAddress,
           onChanged: (value) {
@@ -387,8 +394,8 @@ class PhoneInput extends StatelessWidget {
             icon: const Icon(Icons.phone),
             labelText: 'Phone Number',
             helperText: 'Enter a valid turkish number starting with 09.',
-            errorText:
-                state.phone.invalid ? 'Please use a turkish number' : null,
+            errorMaxLines: 2,
+            errorText: state.phone.valid ? null : 'Please use a turkish number',
           ),
           keyboardType: TextInputType.phone,
           onChanged: (value) {
@@ -417,9 +424,9 @@ class PasswordInput extends StatelessWidget {
             helperMaxLines: 2,
             labelText: 'Password',
             errorMaxLines: 2,
-            errorText: state.password.invalid
-                ? 'Password should be atleast 8 characters with atleast one number and one letter.'
-                : null,
+            errorText: state.password.valid
+                ? null
+                : 'Password should be atleast 8 characters with atleast one number and one letter.',
           ),
           obscureText: true,
           onChanged: (value) {
