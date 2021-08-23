@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:gigabyte_ticket_system/data/datasources/DataBase.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gigabyte_ticket_system/data/models/task.dart';
@@ -16,15 +17,19 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   File? _image;
   String status = '';
+
   String? base64Image;
   File? tmpFile;
   String errMessage = 'Error file to big';
   final _formkey = GlobalKey<FormState>();
-  final Task task = Task();
+  Task task = Task();
   final ImagePicker imagePicker = ImagePicker();
   var menuItems = ['HIGH', 'MEDIUM', 'LOW'];
   String current = 'HIGH';
-
+  @override
+  void initState() {
+    super.initState();
+  }
   // Future getImage() async {
   //   final pickImage = await imagePicker.pickImage(source: ImageSource.gallery);
   //   setState(() {
@@ -39,15 +44,15 @@ class _AddTaskState extends State<AddTask> {
     return Scaffold(
       body: ListView(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: GestureDetector(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Padding(
                         padding: EdgeInsets.only(top: 50),
@@ -58,42 +63,73 @@ class _AddTaskState extends State<AddTask> {
                         ),
                       ),
                     ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  //   child: GestureDetector(
-                  //     onTap: null,
-                  //     child: Padding(
-                  //       padding: EdgeInsets.only(top: 50),
-                  //       child: Icon(
-                  //         Icons.attach_file,
-                  //         size: 30,
-                  //         color: Theme.of(context).primaryColor,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Text(
-                'Add Task',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: GestureDetector(
+                        onTap: null,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 50),
+                          child: Icon(
+                            Icons.attach_file,
+                            size: 30,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Form(
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  'Add Task',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Company name: ' +
+                      widget.user!.companyname.toString() +
+                      '\nBranch Location: ' +
+                      widget.user!.city.toString() +
+                      '\n Region: ' +
+                      widget.user!.city.toString() +
+                      '\n Address: ' +
+                      widget.user!.address.toString() +
+                      '\n Name: ' +
+                      widget.user!.name.toString() +
+                      '\n Surname: ' +
+                      widget.user!.surname.toString() +
+                      '\n Telephone: ' +
+                      widget.user!.telephone.toString(),
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Form(
                   key: _formkey,
                   child: Column(
                     children: [
+                      Text(
+                        'Priority',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       DropdownButton(
+                        icon: Icon(Icons.arrow_drop_down_circle),
+                        iconSize: 22.0,
+                        iconEnabledColor: Theme.of(context).primaryColor,
                         hint: Text('Please select an urgency level'),
                         value: current,
                         items: menuItems.map((String item) {
@@ -109,80 +145,81 @@ class _AddTaskState extends State<AddTask> {
                           });
                         },
                       ),
-                      Request(task: task),
-                      TicketProblem(task: task),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 20.0),
+                        child: TextFormField(
+                          style: TextStyle(fontSize: 18.0),
+                          decoration: InputDecoration(
+                            labelText: 'Request',
+                            labelStyle: TextStyle(fontSize: 18.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (input) => input!.trim().isEmpty
+                              ? 'Please enter a task title'
+                              : null,
+                          onChanged: (input) => task.request = input,
+                          initialValue: task.request,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 20.0),
+                        child: TextFormField(
+                          style: TextStyle(fontSize: 18.0),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 100),
+                            labelText: 'Ticket Problem',
+                            labelStyle: TextStyle(fontSize: 18.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          validator: (input) => input!.trim().isEmpty
+                              ? 'Please enter a problem description'
+                              : null,
+                          onChanged: (input) =>
+                              task.ticketProblemDescription = input,
+                          initialValue: task.request,
+                        ),
+                      ),
                       _image == null
                           ? Text('No image avilable')
                           : Image.file(
                               _image!,
                               fit: BoxFit.fill,
-                            )
+                            ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            task.branchCityName = widget.user!.city;
+                            task.company = widget.user!.companyname;
+                            task.companyAddress = widget.user!.address;
+                            task.email = widget.user!.email;
+                            task.name = widget.user!.name;
+                            task.region = widget.user!.region;
+                            task.surname = widget.user!.surname;
+                            task.telePhone = widget.user!.telephone;
+                            task.status = 'pending';
+                          });
+
+                          logger.w(task);
+                          logger.w(widget.user);
+                        },
+                        child: Text(
+                          'Add',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
                     ],
-                  ))
-            ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class Request extends StatelessWidget {
-  const Request({
-    Key? key,
-    required this.task,
-  }) : super(key: key);
-
-  final Task task;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-      child: TextFormField(
-        style: TextStyle(fontSize: 18.0),
-        decoration: InputDecoration(
-          labelText: 'Request',
-          labelStyle: TextStyle(fontSize: 18.0),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-        validator: (input) =>
-            input!.trim().isEmpty ? 'Please enter a task title' : null,
-        onSaved: (input) => task.request = input,
-        initialValue: task.request,
-      ),
-    );
-  }
-}
-
-class TicketProblem extends StatelessWidget {
-  const TicketProblem({
-    Key? key,
-    required this.task,
-  }) : super(key: key);
-
-  final Task task;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-      child: TextFormField(
-        style: TextStyle(fontSize: 18.0),
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 100),
-          labelText: 'Ticket Problem',
-          labelStyle: TextStyle(fontSize: 18.0),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-        validator: (input) =>
-            input!.trim().isEmpty ? 'Please enter a problem description' : null,
-        onSaved: (input) => task.ticketProblemDescription = input,
-        initialValue: task.request,
       ),
     );
   }

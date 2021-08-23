@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gigabyte_ticket_system/data/datasources/DataBase.dart';
+import 'package:gigabyte_ticket_system/data/models/users.dart';
 import 'package:gigabyte_ticket_system/features/login/presentation/bloc/login_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gigabyte_ticket_system/features/registration/presentation/pages/registrationPage.dart';
 import 'package:gigabyte_ticket_system/features/task/presentation/pages/task_screen.dart';
+import 'package:logger/logger.dart';
 
 class MyLoginForm extends StatefulWidget {
   MyLoginForm({Key? key}) : super(key: key);
@@ -43,8 +46,10 @@ class _MyLoginFormState extends State<MyLoginForm> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionSuccess) {
+          User user = state.user;
+
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          showDialog(context: context, builder: (_) => SuccessDialog());
+          showDialog(context: context, builder: (_) => SuccessDialog(user));
         }
         if (state.status.isSubmissionInProgress) {
           ScaffoldMessenger.of(context)
@@ -152,6 +157,10 @@ class PasswordInput extends StatelessWidget {
 }
 
 class SuccessDialog extends StatelessWidget {
+  final User? user;
+
+  SuccessDialog(this.user);
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -185,11 +194,13 @@ class SuccessDialog extends StatelessWidget {
                   return ElevatedButton(
                     child: const Text('OK'),
                     onPressed: () {
+                      Logger logger = Logger(printer: PrettyPrinter());
+                      logger.w(this.user);
                       Navigator.pop(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => TaskScreen(state.user)));
+                              builder: (context) => TaskScreen(this.user)));
                     },
                   );
                 },

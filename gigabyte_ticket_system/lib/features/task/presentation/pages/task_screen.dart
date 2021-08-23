@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gigabyte_ticket_system/data/datasources/DataBase.dart';
 import 'package:gigabyte_ticket_system/data/models/users.dart';
 import 'package:gigabyte_ticket_system/features/task/presentation/pages/addTask.dart';
 
@@ -14,12 +15,15 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => AddTask(
-                        user: widget.user,
-                      ))),
+          onPressed: () {
+            logger.w(widget.user);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => AddTask(
+                          user: widget.user,
+                        )));
+          },
           child: Icon(Icons.add),
         ),
         body: ListView.builder(
@@ -44,7 +48,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       height: 10,
                     ),
                     Text(
-                      '1 of 10',
+                      'Welcome ' + widget.user!.username.toString(),
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 20.0,
