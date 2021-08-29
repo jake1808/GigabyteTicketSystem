@@ -21,10 +21,9 @@ class DBhelper {
 
   initDB() async {
     logger.w('opening db');
-    return await openDatabase(
-      join(await getDatabasesPath(), 'ticketsystem.db'),
-      onCreate: (db, version) async {
-        await db.execute('''
+    return await openDatabase(join(await getDatabasesPath(), 'ticketsystem.db'),
+        onCreate: (db, version) async {
+          await db.execute('''
      CREATE TABLE Users (
     id          INTEGER PRIMARY KEY AUTOINCREMENT ,
     name        STRING ,
@@ -40,7 +39,7 @@ class DBhelper {
     password    VARCHAR
 )
       ''');
-        await db.execute('''
+          await db.execute('''
       CREATE TABLE Tickets (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     Urgencylevel             VARCHAR,
@@ -54,12 +53,25 @@ class DBhelper {
     CompanyAddress           VARCHAR,
     File                     BLOB,
     Name                     VARCHAR,
-    Surname                  VARCHAR
+    Surname                  VARCHAR,
+    
 )
       ''');
-      },
-      version: 1,
-    );
+        },
+        version: 2,
+        onUpgrade: (db, oldVersion, newVersion) async {
+          var batch = db.batch();
+          if (oldVersion == 1) {
+            _upGrade(batch);
+            await batch.commit();
+          }
+        });
+  }
+
+  void _upGrade(Batch batch) {
+    batch.execute('''
+          ALTER TABLE Tickets ADD Status VARCHAR
+          ''');
   }
 
   Future<int> newUser(User user) async {
@@ -113,57 +125,6 @@ class DBhelper {
     }
   }
 
-  Future<int> createTask(Task task) async {
-    final db = await database;
-
-    var res = await db!.rawInsert(
-      '''
-    INSERT INTO Tickets(
-       Urgencylevel, Email, Telephone, Request, TicketProblemDescription, Companyname, Branchnamecity, Region, CompanyAddress, File, Name, Surname 
-    )VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
-    ''',
-      [
-        task.urgencyLevel,
-        task.email,
-        task.telePhone,
-        task.request,
-        task.ticketProblemDescription,
-        task.company,
-        task.branchCityName,
-        task.region,
-        task.companyAddress,
-        task.file,
-        task.name,
-        task.surname,
-      ],
-    );
-    return res;
-  }
-
-  Future updateTask(Task task) async {
-    final db = await database;
-
-    db?.rawUpdate(''' 
-    UPDATE Tickets
-    SET Urgencylevel=?, Email=?, Telephone=?, Request=?, TicketProblemDescription=?, Companyname=?, Branchnamecity=?, Region=?, CompanyAddress=?, File=?, Name=?, Surname=? 
-    WHERE id=?
-    ''', [
-      task.urgencyLevel,
-      task.email,
-      task.telePhone,
-      task.request,
-      task.ticketProblemDescription,
-      task.company,
-      task.branchCityName,
-      task.region,
-      task.companyAddress,
-      task.file,
-      task.name,
-      task.surname,
-      task.id,
-    ]);
-  }
-
   Future<List<Map<String, dynamic>>> getTasksMapList() async {
     final db = await database;
     final List<Map<String, dynamic>> result = await db!.query("Tickets");
@@ -172,23 +133,37 @@ class DBhelper {
 
   Future<List<Task>> getTaskList() async {
     final List<Map<String, dynamic>> taskMapList = await getTasksMapList();
-    final List<Task> taskList = [];
+    List<Task> taskList = [];
     taskMapList.forEach((element) {
       taskList.add(Task.fromMap(element));
     });
     return taskList;
   }
 
-  Future deleteTask(Task task) async {
+  Future<int> insertTask(Task task) async {
     final db = await database;
+    final int result = await db!.insert('Tickets', task.toMap());
+    return result;
+  }
 
-    var res = await db!.rawDelete(
-      ''' 
-    DELETE FROM Tickets WHERE id = ?
-    ''',
-      [
-        task.id,
-      ],
+  Future<int> updateTask(Task task) async {
+    final db = await database;
+    final int result = await db!.update(
+      'Tickets',
+      task.toMap(),
+      where: 'id =?',
+      whereArgs: [task.id],
     );
+    return result;
+  }
+
+  Future<int?> deleteTask(int? id) async {
+    final db = await database;
+    final int result = await db!.delete(
+      'Tickets',
+      where: 'id =?',
+      whereArgs: [id],
+    );
+    return result;
   }
 }
