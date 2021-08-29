@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:gigabyte_ticket_system/data/datasources/DataBase.dart';
+import 'package:gigabyte_ticket_system/features/task/presentation/pages/task_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gigabyte_ticket_system/data/models/task.dart';
@@ -25,6 +26,7 @@ class _AddTaskState extends State<AddTask> {
   Task task = Task();
   final ImagePicker imagePicker = ImagePicker();
   var menuItems = ['HIGH', 'MEDIUM', 'LOW'];
+  var menuItemsproj = ['Price', 'Job', 'Project', 'Demo'];
   String current = 'HIGH';
 
   @override
@@ -76,7 +78,15 @@ class _AddTaskState extends State<AddTask> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => TaskScreen(widget.user),
+                          ),
+                        );
+                      },
                       child: Padding(
                         padding: EdgeInsets.only(top: 50),
                         child: Icon(
@@ -95,6 +105,12 @@ class _AddTaskState extends State<AddTask> {
                               onTap: () {
                                 DBhelper.db.deleteTask(task.id);
                                 Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => TaskScreen(widget.user),
+                                  ),
+                                );
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(top: 50),
@@ -147,10 +163,10 @@ class _AddTaskState extends State<AddTask> {
                 ),
                 Text(
                   task.status == 'complete'
-                      ? 'Task Complete'
+                      ? 'Ticket Complete'
                       : widget.task != null
-                          ? 'Edit Task'
-                          : 'Add Task',
+                          ? 'Edit Ticket'
+                          : 'Add Ticket',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 40.0,
@@ -208,7 +224,6 @@ class _AddTaskState extends State<AddTask> {
                               }).toList(),
                               onChanged: (String? value) {
                                 setState(() {
-                                  current = value!;
                                   task.urgencyLevel = value;
                                 });
                               },
@@ -216,21 +231,37 @@ class _AddTaskState extends State<AddTask> {
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: 20.0, horizontal: 20.0),
-                        child: TextFormField(
-                          style: TextStyle(fontSize: 18.0),
-                          decoration: InputDecoration(
-                            labelText: 'Request',
-                            labelStyle: TextStyle(fontSize: 18.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Request',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          enabled: task.status == 'complete' ? false : true,
-                          validator: (input) => input!.trim().isEmpty
-                              ? 'Please enter a task title'
-                              : null,
-                          onChanged: (input) => task.request = input,
-                          initialValue: task.request,
+                            task.status == 'complete'
+                                ? Text('${widget.task!.request}')
+                                : DropdownButton(
+                                    icon: Icon(Icons.arrow_drop_down_circle),
+                                    iconSize: 22.0,
+                                    iconEnabledColor:
+                                        Theme.of(context).primaryColor,
+                                    value: task.request,
+                                    items: menuItemsproj.map((String item) {
+                                      return DropdownMenuItem(
+                                        child: Text(item),
+                                        value: item,
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        task.request = value;
+                                      });
+                                    },
+                                  ),
+                          ],
                         ),
                       ),
                       Padding(
@@ -239,6 +270,8 @@ class _AddTaskState extends State<AddTask> {
                         child: TextFormField(
                           enabled: task.status == 'complete' ? false : true,
                           style: TextStyle(fontSize: 18.0),
+                          textAlign: TextAlign.center,
+                          maxLines: 10,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 100),
                             labelText: 'Ticket Problem',
@@ -278,6 +311,12 @@ class _AddTaskState extends State<AddTask> {
                                   onPressed: () {
                                     DBhelper.db.updateTask(task);
                                     Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => TaskScreen(widget.user),
+                                      ),
+                                    );
                                   },
                                   child: Text(
                                     'Update',
@@ -301,6 +340,13 @@ class _AddTaskState extends State<AddTask> {
                                       });
                                       DBhelper.db.insertTask(task);
                                       Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              TaskScreen(widget.user),
+                                        ),
+                                      );
                                     }
 
                                     logger.w(task);

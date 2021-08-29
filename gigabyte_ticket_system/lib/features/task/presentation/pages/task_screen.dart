@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:gigabyte_ticket_system/data/datasources/DataBase.dart';
 import 'package:gigabyte_ticket_system/data/models/task.dart';
@@ -35,6 +37,7 @@ class _TaskScreenState extends State<TaskScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             logger.w(widget.user);
+            Navigator.pop(context);
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -62,21 +65,13 @@ class _TaskScreenState extends State<TaskScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Tasks',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 42,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            GestureDetector(
-                              child: Icon(Icons.refresh),
-                              onTap: updateTaskList,
-                            )
-                          ],
+                        Text(
+                          'Tickets',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 42,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         SizedBox(
                           height: 10,
@@ -109,6 +104,15 @@ class _TaskScreenState extends State<TaskScreen> {
                                 updateTaskList();
                               },
                         child: ListTile(
+                          leading: snapshot.data![index - 1].file == null
+                              ? null
+                              : CircleAvatar(
+                                  radius: 30,
+                                  child: ClipOval(
+                                    child: Image.memory(snapshot
+                                        .data![index - 1].file as Uint8List),
+                                  ),
+                                ),
                           title: Text(
                             snapshot.data![index - 1].request.toString(),
                             style: TextStyle(
@@ -116,7 +120,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             ),
                           ),
                           subtitle: Text(
-                            '${snapshot.data![index - 1].urgencyLevel} - ${snapshot.data![index - 1].status}',
+                            '${snapshot.data![index - 1].urgencyLevel} - ${snapshot.data![index - 1].status} - ${snapshot.data![index - 1].company}',
                             style: TextStyle(
                               fontSize: 15.0,
                             ),
@@ -124,6 +128,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           onTap: () {
                             var temp = snapshot.data![index - 1];
                             logger.w(temp);
+                            Navigator.pop(context);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
