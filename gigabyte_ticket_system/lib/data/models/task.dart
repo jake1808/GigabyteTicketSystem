@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'dart:typed_data';
+
 class Task {
   int? id;
   String? urgencyLevel;
@@ -11,7 +13,7 @@ class Task {
   String? branchCityName;
   String? region;
   String? companyAddress;
-  String? file;
+  Uint8List? file;
   String? name;
   String? surname;
   String? status;
@@ -43,7 +45,7 @@ class Task {
     String? branchCityName,
     String? region,
     String? companyAddress,
-    String? file,
+    Uint8List? file,
     String? name,
     String? surname,
     String? status,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:gigabyte_ticket_system/data/datasources/DataBase.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +38,29 @@ class _AddTaskState extends State<AddTask> {
     super.initState();
   }
 
-  // Future getImage() async {
-  //   final pickImage = await imagePicker.pickImage(source: ImageSource.gallery);
-  //   setState(() {
-  //     _image = (pickImage) as File?;
-  //     Logger logger = Logger(printer: PrettyPrinter());
-  //     logger.w('here+$_image');
-  //   });
-  // }
+  Future pickImageGallery() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+
+    final imageTemp = File(image.path);
+    var bytes = await imageTemp.readAsBytes();
+    setState(() {
+      this._image = imageTemp;
+      task.file = bytes;
+    });
+  }
+
+  Future pickImageCamera() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (image == null) return;
+
+    final imageTemp = File(image.path);
+    var bytes = await imageTemp.readAsBytes();
+    setState(() {
+      this._image = imageTemp;
+      task.file = bytes;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +112,24 @@ class _AddTaskState extends State<AddTask> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
                             child: GestureDetector(
-                              onTap: null,
+                              onTap: pickImageCamera,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 50),
+                                child: Icon(
+                                  Icons.camera,
+                                  size: 30,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                    task.status == 'complete'
+                        ? Text('')
+                        : Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: GestureDetector(
+                              onTap: pickImageGallery,
                               child: Padding(
                                 padding: EdgeInsets.only(top: 50),
                                 child: Icon(
@@ -222,11 +255,21 @@ class _AddTaskState extends State<AddTask> {
                           initialValue: task.ticketProblemDescription,
                         ),
                       ),
-                      _image == null
+                      task.file == null
                           ? Text('No image avilable')
-                          : Image.file(
-                              _image!,
-                              fit: BoxFit.fill,
+                          : GestureDetector(
+                              onLongPress: task.status == 'complete'
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        _image = null;
+                                        task.file = null;
+                                      });
+                                    },
+                              child: Image.memory(
+                                task.file as Uint8List,
+                                fit: BoxFit.fill,
+                              ),
                             ),
                       task.status == "complete"
                           ? Text("")
